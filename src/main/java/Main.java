@@ -1,11 +1,7 @@
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Predicate;
 
 public class Main {
     private static final List<String> BuiltInCommands = List.of("type", "echo", "exit");
@@ -32,6 +28,7 @@ public class Main {
                 type(rem);
             }
             else {
+                executeProcess(cmd, rem.split(" "));
                 System.out.println(input + ": command not found");
             }
 
@@ -59,7 +56,19 @@ public class Main {
             }
 
             System.out.println(rem + ": not found");
+        }
+    }
 
+    private static void executeProcess(String exePath, String[] options)
+    {
+        List<String> commands = List.of(exePath);
+        commands.addAll(Arrays.asList(options));
+
+        try {
+            ProcessBuilder pb = new ProcessBuilder(commands);
+            pb.redirectErrorStream(true);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
