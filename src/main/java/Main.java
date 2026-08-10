@@ -64,6 +64,8 @@ public class Main {
         List<String> commands = List.of(exePath);
         commands.addAll(Arrays.asList(options));
 
+        System.out.println("Program was passed " + commands.size() + " args (including program name).");
+
         try {
             ProcessBuilder pb = new ProcessBuilder(commands);
             pb.redirectErrorStream(true);
