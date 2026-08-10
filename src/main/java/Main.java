@@ -22,7 +22,7 @@ public class Main {
                 String arg = input.substring(5);
                 boolean isBuiltInCmd = builtInCommands.contains(arg);
                 if (isBuiltInCmd) System.out.println(arg + " is a shell builtin");
-                else System.out.println(arg + " invalid_command");
+                else System.out.println(arg + ": not found");
             }
             else {
                 System.out.println(input + ": command not found");
