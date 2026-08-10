@@ -30,7 +30,7 @@ public class Main {
             }
             else {
                 if (isExecutable(cmd)) {
-                    
+
                 }
                 else
                     System.out.println("Arg #0 (program name): " + cmd);
@@ -87,7 +87,7 @@ public class Main {
             System.out.println("exit code " + exitCode);
 
         } catch (Exception e) {
-            System.out.println("Arg #0 (" + cmd + "): custom_exe_9142");
+            System.out.println(e.getMessage());
         }
     }
 }
