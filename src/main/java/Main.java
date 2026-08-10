@@ -34,8 +34,7 @@ public class Main {
                 }
                 else {
                     String[] splitted = input.split(" ");
-                    int argLength = splitted.length > 1 ? splitted.length - 1 : 0;
-                    System.out.println("Program was passed " + argLength + " args (including program name).");
+                    System.out.println("Program was passed " + splitted.length + " args (including program name).");
                     System.out.println("Arg #0 (program name): " + cmd);
 //                System.out.println(input + ": command not found");}
                 }
