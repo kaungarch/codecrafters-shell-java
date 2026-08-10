@@ -12,17 +12,19 @@ public class Main {
             System.out.print("$ ");
             String input = scanner.nextLine();
 
-            if (input.equals("exit")) {
+            String cmd = input.indexOf(" ") == -1 ? input : input.substring(0, input.indexOf(" "));
+            String rem = input.indexOf(" ") == -1 ? "" : input.substring(input.indexOf(" ") + 1);
+
+            if (cmd.equals("exit")) {
                 break;
             }
-            else if (input.startsWith("echo ")) {
-                System.out.println(input.substring(5));
+            else if (cmd.equals("echo")) {
+                System.out.println(rem);
             }
-            else if (input.startsWith("type ")) {
-                String arg = input.substring(5);
-                boolean isBuiltInCmd = builtInCommands.contains(arg);
-                if (isBuiltInCmd) System.out.println(arg + " is a shell builtin");
-                else System.out.println(arg + ": not found");
+            else if (cmd.equals("type")) {
+                boolean isBuiltInCmd = builtInCommands.contains(rem);
+                if (isBuiltInCmd) System.out.println(rem + " is a shell builtin");
+                else System.out.println(rem + ": not found");
             }
             else {
                 System.out.println(input + ": command not found");
