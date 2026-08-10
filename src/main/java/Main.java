@@ -70,7 +70,7 @@ public class Main {
             ProcessBuilder pb = new ProcessBuilder(commands);
             pb.redirectErrorStream(true);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 }
