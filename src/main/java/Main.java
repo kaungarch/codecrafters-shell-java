@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -61,7 +62,8 @@ public class Main {
 
     private static void executeProcess(String exePath, String[] options)
     {
-        List<String> commands = List.of(exePath);
+        List<String> commands = new LinkedList<>();
+        commands.add(exePath);
         commands.addAll(Arrays.asList(options));
 
         System.out.println("Program was passed " + commands.size() + " args (including program name).");
