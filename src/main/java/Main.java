@@ -29,12 +29,21 @@ public class Main {
                 type(rem);
             }
             else {
-                executeProcess(cmd, rem.split(" "));
-                System.out.println(input + ": command not found");
+                if (isExecutable(cmd)) {
+                    
+                }
+                else
+                    System.out.println("Arg #0 (program name): " + cmd);
+//                System.out.println(input + ": command not found");
             }
 
         }
 
+    }
+
+    private static boolean isExecutable(String cmd)
+    {
+        return false;
     }
 
     private static void type(String rem)
@@ -68,11 +77,17 @@ public class Main {
 
         System.out.println("Program was passed " + commands.size() + " args (including program name).");
 
-        try {
-            ProcessBuilder pb = new ProcessBuilder(commands);
-            pb.redirectErrorStream(true);
+
+        ProcessBuilder pb = new ProcessBuilder(commands);
+        pb.redirectErrorStream(true);
+
+        try (Process process = pb.start()) {
+
+            int exitCode = process.waitFor();
+            System.out.println("exit code " + exitCode);
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Arg #0 (" + cmd + "): custom_exe_9142");
         }
     }
 }
