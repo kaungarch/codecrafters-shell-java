@@ -4,15 +4,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Predicate;
 
 public class Main {
+    private static final List<String> BuiltInCommands = List.of("type", "echo", "exit");
+
     public static void main(String[] args) throws Exception
     {
         // TODO: Uncomment the code below to pass the first stage
-        List<String> builtInCommands = List.of("type", "echo", "exit");
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -29,33 +29,7 @@ public class Main {
                 System.out.println(rem);
             }
             else if (cmd.equals("type")) {
-                boolean isBuiltInCmd = builtInCommands.contains(rem);
-                if (isBuiltInCmd) {
-                    System.out.println(rem + " is a shell builtin");
-                }
-                else {
-//                    TODO: search executable in PATH variable
-                    String pathVariable = System.getenv("PATH");
-                    String[] directories = pathVariable.split(File.pathSeparator);
-                    boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
-
-//                    TODO: search executables that match to rem in all dir
-                    Predicate<String> pred = dir -> {
-                        Path exePath = isWindows ? Paths.get(dir).resolve(rem + ".exe") : Paths.get(dir).resolve(rem);
-
-                        return Files.isRegularFile(exePath) && Files.isExecutable(exePath) && Files.isExecutable(exePath);
-                    };
-
-                    Arrays.stream(directories).filter(pred).findFirst()
-                            .ifPresentOrElse(
-                                    dir -> {
-                                        System.out.println(rem + " is " + Paths.get(dir).resolve(rem));
-                                    },
-                                    () -> {
-                                        System.out.println(rem + ": not found");
-                                    }
-                            );
-                }
+                System.out.println(type(rem));
             }
             else {
                 System.out.println(input + ": command not found");
@@ -63,5 +37,28 @@ public class Main {
 
         }
 
+    }
+
+    private static String type(String rem)
+    {
+        boolean isBuiltInCmd = BuiltInCommands.contains(rem);
+        if (isBuiltInCmd)
+            return rem + " is a shell builtin";
+        else {
+//                    TODO: search executable in PATH variable
+            String pathVariable = System.getenv("PATH");
+            String[] directories = pathVariable.split(File.pathSeparator);
+            boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+
+            for (String dir : directories) {
+                String fileExt = isWindows ? rem + ".exe" : rem;
+                File file = new File(dir, fileExt);
+                if (file.exists() && file.canExecute())
+                    return rem + " is " + file.getAbsolutePath();
+            }
+
+            return rem + ": not found";
+
+        }
     }
 }
