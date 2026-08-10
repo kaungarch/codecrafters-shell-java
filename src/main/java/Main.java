@@ -15,12 +15,13 @@ public class Main {
                 System.out.println(input.substring(5));
             }
 
-            if (input.equals("exit")) {
+            else if (input.equals("exit")) {
                 break;
             }
 
-            System.out.println(input + ": command not found");
-
+            else {
+                System.out.println(input + ": command not found");
+            }
 
         }
 
