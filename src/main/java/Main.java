@@ -29,7 +29,7 @@ public class Main {
                 System.out.println(rem);
             }
             else if (cmd.equals("type")) {
-                System.out.println(type(rem));
+                type(rem);
             }
             else {
                 System.out.println(input + ": command not found");
@@ -39,11 +39,12 @@ public class Main {
 
     }
 
-    private static String type(String rem)
+    private static void type(String rem)
     {
         boolean isBuiltInCmd = BuiltInCommands.contains(rem);
-        if (isBuiltInCmd)
-            return rem + " is a shell builtin";
+        if (isBuiltInCmd) {
+            System.out.println(rem + " is a shell builtin");
+        }
         else {
 //                    TODO: search executable in PATH variable
             String pathVariable = System.getenv("PATH");
@@ -54,10 +55,10 @@ public class Main {
                 String fileExt = isWindows ? rem + ".exe" : rem;
                 File file = new File(dir, fileExt);
                 if (file.exists() && file.canExecute())
-                    return rem + " is " + file.getAbsolutePath();
+                    System.out.println(rem + " is " + file.getAbsolutePath());
             }
 
-            return rem + ": not found";
+            System.out.println(rem + ": not found");
 
         }
     }
