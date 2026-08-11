@@ -57,7 +57,6 @@ public class Main {
         else {
             String cwd = System.getProperty("user.dir");
             Path desiredPath = Paths.get(cwd).resolve(input).normalize();
-            System.out.println(desiredPath);
 
             if (Files.isDirectory(desiredPath)) {
                 System.setProperty("user.dir", desiredPath.toString());
