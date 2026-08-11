@@ -39,6 +39,7 @@ public class Main {
                     int i = 1;
                     for (String str : rem.split(" ")){
                         System.out.println("Arg #" + i + ": " + str);
+                        i++;
                     }
 //                System.out.println(input + ": command not found");}
                 }
