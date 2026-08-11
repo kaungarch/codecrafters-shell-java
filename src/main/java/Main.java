@@ -71,7 +71,8 @@ public class Main {
             String fileExt = isWindows ? input + ".exe" : input;
             File file = new File(dir, fileExt);
             if (file.exists() && file.canExecute())
-                return Optional.ofNullable(file.getAbsolutePath());
+                return Optional.of(file.getName());
+//                return Optional.ofNullable(file.getAbsolutePath());
         }
 
         return Optional.ofNullable(null);
