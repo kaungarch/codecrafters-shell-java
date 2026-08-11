@@ -36,6 +36,10 @@ public class Main {
                     String[] splitted = input.split(" ");
                     System.out.println("Program was passed " + splitted.length + " args (including program name).");
                     System.out.println("Arg #0 (program name): " + cmd);
+                    int i = 1;
+                    for (String str : rem.split(" ")){
+                        System.out.println("Arg #" + i + ": " + str);
+                    }
 //                System.out.println(input + ": command not found");}
                 }
             }
