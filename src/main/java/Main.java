@@ -53,8 +53,10 @@ public class Main {
             for (String dir : directories) {
                 String fileExt = isWindows ? rem + ".exe" : rem;
                 File file = new File(dir, fileExt);
-                if (file.exists() && file.canExecute())
+                if (file.exists() && file.canExecute()) {
                     System.out.println(rem + " is " + file.getAbsolutePath());
+                    return;
+                }
             }
 
             System.out.println(rem + ": not found");
