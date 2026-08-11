@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
@@ -83,8 +85,11 @@ public class Main {
 
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.redirectErrorStream(true);
+        pb.inheritIO();
 
-        try (Process process = pb.start()) {
+        try (
+                Process process = pb.start()
+        ) {
 
             int exitCode = process.waitFor();
 
