@@ -55,6 +55,13 @@ public class Main {
             System.setProperty("user.dir", input);
         }
         else {
+            String cwd = System.getProperty("user.dir");
+            Path desiredPath = Paths.get(cwd).resolve(input).normalize();
+            System.out.println(desiredPath);
+            if (Files.exists(desiredPath)) {
+                System.setProperty("user.dir", desiredPath.toString());
+                return;
+            }
             System.out.println("cd: " + input + ": No such file or directory");
         }
     }
