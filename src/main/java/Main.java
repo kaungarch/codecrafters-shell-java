@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    private static final List<String> BuiltInCommands = List.of("type", "echo", "exit");
+    private static final List<String> BuiltInCommands = List.of("type", "echo", "exit", "pwd");
 
     public static void main(String[] args) throws Exception
     {
