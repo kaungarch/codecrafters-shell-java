@@ -1,8 +1,5 @@
 import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     private static final List<String> BuiltInCommands = List.of("type", "echo", "exit");
@@ -29,29 +26,14 @@ public class Main {
                 type(rem);
             }
             else {
-                if (isExecutable(cmd)) {
-
+                Optional<String> exePathOptional = getExecutable(cmd);
+                if (exePathOptional.isPresent()) {
+                    executeProcess(exePathOptional.get(), rem.split(" "));
                 }
-                else {
-                    String[] splitted = input.split(" ");
-                    System.out.println("Program was passed " + splitted.length + " args (including program name).");
-                    System.out.println("Arg #0 (program name): " + cmd);
-                    int i = 1;
-                    for (String str : rem.split(" ")){
-                        System.out.println("Arg #" + i + ": " + str);
-                        i++;
-                    }
-//                System.out.println(input + ": command not found");}
-                }
+                else
+                    System.out.println(input + ": command not found");
             }
-
         }
-
-    }
-
-    private static boolean isExecutable(String cmd)
-    {
-        return false;
     }
 
     private static void type(String rem)
@@ -77,14 +59,27 @@ public class Main {
         }
     }
 
+    private static Optional<String> getExecutable(String input)
+    {
+        String pathVariable = System.getenv("PATH");
+        String[] directories = pathVariable.split(File.pathSeparator);
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+
+        for (String dir : directories) {
+            String fileExt = isWindows ? input + ".exe" : input;
+            File file = new File(dir, fileExt);
+            if (file.exists() && file.canExecute())
+                return Optional.ofNullable(file.getAbsolutePath());
+        }
+
+        return Optional.ofNullable(null);
+    }
+
     private static void executeProcess(String exePath, String[] options)
     {
         List<String> commands = new LinkedList<>();
         commands.add(exePath);
         commands.addAll(Arrays.asList(options));
-
-        System.out.println("Program was passed " + commands.size() + " args (including program name).");
-
 
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.redirectErrorStream(true);
@@ -92,7 +87,6 @@ public class Main {
         try (Process process = pb.start()) {
 
             int exitCode = process.waitFor();
-            System.out.println("exit code " + exitCode);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
