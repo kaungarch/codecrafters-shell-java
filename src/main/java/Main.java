@@ -27,10 +27,13 @@ public class Main {
             else if (cmd.equals("type")) {
                 type(rem);
             }
+            else if (cmd.equals("pwd")) {
+                printWorkingDirectory();
+            }
             else {
-                Optional<String> exePathOptional = getExecutable(cmd);
-                if (exePathOptional.isPresent()) {
-                    executeProcess(exePathOptional.get(), rem.split(" "));
+                boolean executable = isExecutable(cmd);
+                if (executable) {
+                    executeProcess(cmd, rem.split(" "));
                 }
                 else
                     System.out.println(input + ": command not found");
@@ -38,11 +41,17 @@ public class Main {
         }
     }
 
-    private static void type(String rem)
+    private static void printWorkingDirectory()
     {
-        boolean isBuiltInCmd = BuiltInCommands.contains(rem);
+        String dir = System.getProperty("user.dir");
+        System.out.println(dir);
+    }
+
+    private static void type(String input)
+    {
+        boolean isBuiltInCmd = BuiltInCommands.contains(input);
         if (isBuiltInCmd) {
-            System.out.println(rem + " is a shell builtin");
+            System.out.println(input + " is a shell builtin");
         }
         else {
 //                    TODO: search executable in PATH variable
@@ -51,19 +60,19 @@ public class Main {
             boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 
             for (String dir : directories) {
-                String fileExt = isWindows ? rem + ".exe" : rem;
+                String fileExt = isWindows ? input + ".exe" : input;
                 File file = new File(dir, fileExt);
                 if (file.exists() && file.canExecute()) {
-                    System.out.println(rem + " is " + file.getAbsolutePath());
+                    System.out.println(input + " is " + file.getAbsolutePath());
                     return;
                 }
             }
 
-            System.out.println(rem + ": not found");
+            System.out.println(input + ": not found");
         }
     }
 
-    private static Optional<String> getExecutable(String input)
+    private static boolean isExecutable(String input)
     {
         String pathVariable = System.getenv("PATH");
         String[] directories = pathVariable.split(File.pathSeparator);
@@ -73,11 +82,10 @@ public class Main {
             String fileExt = isWindows ? input + ".exe" : input;
             File file = new File(dir, fileExt);
             if (file.exists() && file.canExecute())
-                return Optional.of(file.getName());
-//                return Optional.ofNullable(file.getAbsolutePath());
+                return true;
         }
 
-        return Optional.ofNullable(null);
+        return false;
     }
 
     private static void executeProcess(String exePath, String[] options)
