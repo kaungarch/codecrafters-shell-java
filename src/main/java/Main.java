@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
-    private static final List<String> BuiltInCommands = List.of("type", "echo", "exit", "pwd");
+    private static final List<String> BuiltInCommands = List.of("type", "echo", "exit", "pwd", "cd");
 
     public static void main(String[] args) throws Exception
     {
@@ -19,7 +22,7 @@ public class Main {
             String rem = !input.contains(" ") ? "" : input.substring(input.indexOf(" ") + 1);
 
             if (cmd.equals("exit")) {
-                break;
+                System.exit(0);
             }
             else if (cmd.equals("echo")) {
                 System.out.println(rem);
@@ -30,6 +33,9 @@ public class Main {
             else if (cmd.equals("pwd")) {
                 printWorkingDirectory();
             }
+            else if (cmd.equals("cd")) {
+                changeDirectory(rem);
+            }
             else {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
@@ -38,6 +44,18 @@ public class Main {
                 else
                     System.out.println(input + ": command not found");
             }
+        }
+    }
+
+    private static void changeDirectory(String input)
+    {
+        Path path = Paths.get(input);
+
+        if (path.isAbsolute() && Files.exists(path)) {
+            System.setProperty("user.dir", input);
+        }
+        else {
+            System.out.println("cd: " + input + ": No such file or directory");
         }
     }
 
