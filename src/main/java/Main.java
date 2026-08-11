@@ -49,6 +49,13 @@ public class Main {
 
     private static void changeDirectory(String input)
     {
+        if (input.equals("~")){
+            boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+            String home = isWindows ? "USERPROFILE" : "HOME";
+            String homeEnv = System.getenv(home);
+            System.setProperty("user.dir", homeEnv);
+            return;
+        }
         Path path = Paths.get(input);
 
         if (path.isAbsolute() && Files.exists(path)) {
