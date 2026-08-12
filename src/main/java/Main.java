@@ -28,7 +28,7 @@ public class Main {
                 System.exit(0);
             }
             else if (cmd.equals("echo")) {
-                System.out.println(removeSingleQuote(rem));
+                System.out.println(removeSingleQuote(rem.replace("\"", "'")));
             }
             else if (cmd.equals("type")) {
                 type(rem);
