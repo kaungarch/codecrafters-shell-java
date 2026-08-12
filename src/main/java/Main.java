@@ -24,7 +24,7 @@ public class Main {
             if (cmd.equals("exit")) {
                 System.exit(0);
             }
-            else if (cmd.equals("echo")) {
+            else if (cmd.equals("echo") || cmd.equals("cat")) {
                 String[] split = rem.split("'");
                 String newStr = String.join("", split);
                 String result = newStr.length() == rem.length() ? newStr.replaceAll("[\\t ]+", " ") : newStr;
