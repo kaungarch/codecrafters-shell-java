@@ -42,9 +42,10 @@ public class Main {
             else {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
-
-                    executeProcess(cmd, getStrWithinSingleQuote(rem).toArray(new String[0]));
-//                    executeProcess(cmd, result.split(" "));
+                    if (rem.contains("'"))
+                        executeProcess(cmd, getStrWithinSingleQuote(rem).toArray(new String[0]));
+                    else
+                        executeProcess(cmd, rem.split(" "));
                 }
                 else
                     System.out.println(input + ": command not found");
