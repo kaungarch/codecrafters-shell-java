@@ -39,6 +39,7 @@ public class Main {
             else {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
+                    System.out.println(cmd + " is executable.");
                     String result = removeSingleQuote(rem);
                     executeProcess(cmd, result.split(" "));
                 }
