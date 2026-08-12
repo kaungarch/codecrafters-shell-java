@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -40,14 +42,27 @@ public class Main {
             else {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
-                    String result = String.join(",", rem.split("'"));
-                    System.out.println(result);
+
+                    executeProcess(cmd, getStrWithinSingleQuote(rem).toArray(new String[0]));
 //                    executeProcess(cmd, result.split(" "));
                 }
                 else
                     System.out.println(input + ": command not found");
             }
         }
+    }
+
+    public static List<String> getStrWithinSingleQuote(String input)
+    {
+        Pattern pattern = Pattern.compile("'([^']*)'");
+        Matcher matcher = pattern.matcher(input);
+        List<String> result = new LinkedList<>();
+
+        while (matcher.find()) {
+            result.add(matcher.group(1));
+        }
+
+        return result;
     }
 
     private static String removeSingleQuote(String input)
