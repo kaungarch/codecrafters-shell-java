@@ -42,6 +42,7 @@ public class Main {
                 if (executable) {
                     String result = Arrays.stream(rem.split(" ")).map(str -> str.replace("'", "")).collect(Collectors.joining(","));
 
+                    System.out.println("Args: " + result);
                     executeProcess(cmd, result.split(","));
 //                    executeProcess(cmd, result.split(" "));
                 }
