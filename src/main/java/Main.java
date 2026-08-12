@@ -25,8 +25,10 @@ public class Main {
                 System.exit(0);
             }
             else if (cmd.equals("echo")) {
-//                System.out.println(rem);
-                System.out.println(rem.replace("'", ""));
+                String[] split = rem.split("'");
+                String newStr = String.join("", split);
+                String result = newStr.length() == rem.length() ? newStr.replace("\t", " ") : newStr;
+                System.out.println(result);
             }
             else if (cmd.equals("type")) {
                 type(rem);
