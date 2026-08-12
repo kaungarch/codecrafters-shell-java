@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     private static final List<String> BuiltInCommands = List.of("type", "echo", "exit", "pwd", "cd");
@@ -39,9 +40,10 @@ public class Main {
             else {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
-                    String result = removeSingleQuote(rem);
-                    System.out.println("exePath: " + cmd + ", args: " + String.join("&", result.split(" ")));
-                    executeProcess(cmd, result.split(" "));
+                    String result = Arrays.stream(rem.split(" ")).map(str -> str.replace("'", "")).collect(Collectors.joining(","));
+
+                    executeProcess(cmd, result.split(","));
+//                    executeProcess(cmd, result.split(" "));
                 }
                 else
                     System.out.println(input + ": command not found");
