@@ -27,7 +27,7 @@ public class Main {
             else if (cmd.equals("echo")) {
                 String[] split = rem.split("'");
                 String newStr = String.join("", split);
-                String result = newStr.length() == rem.length() ? newStr.replace("\t", " ") : newStr;
+                String result = newStr.length() == rem.length() ? newStr.replaceAll("[\\t ]+", " ") : newStr;
                 System.out.println(result);
             }
             else if (cmd.equals("type")) {
