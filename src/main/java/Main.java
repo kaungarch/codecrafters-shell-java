@@ -145,7 +145,7 @@ public class Main {
             int exitCode = process.waitFor();
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Got exception: " + e.getMessage());
         }
     }
 }
