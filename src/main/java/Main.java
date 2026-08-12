@@ -25,7 +25,8 @@ public class Main {
                 System.exit(0);
             }
             else if (cmd.equals("echo")) {
-                System.out.println(rem);
+//                System.out.println(rem);
+                System.out.println(rem.replace("'", ""));
             }
             else if (cmd.equals("type")) {
                 type(rem);
@@ -49,7 +50,7 @@ public class Main {
 
     private static void changeDirectory(String input)
     {
-        if (input.equals("~")){
+        if (input.equals("~")) {
             boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
             String home = isWindows ? "USERPROFILE" : "HOME";
             String homeEnv = System.getenv(home);
