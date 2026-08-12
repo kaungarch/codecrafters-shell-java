@@ -40,10 +40,8 @@ public class Main {
             else {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
-                    String result = Arrays.stream(rem.split(" ")).map(str -> str.replace("'", "")).collect(Collectors.joining(","));
-
-                    System.out.println("Args: " + result);
-                    executeProcess(cmd, result.split(","));
+                    String result = String.join(",", rem.split("'"));
+                    System.out.println(result);
 //                    executeProcess(cmd, result.split(" "));
                 }
                 else
