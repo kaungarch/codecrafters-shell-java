@@ -40,7 +40,7 @@ public class Main {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
                     String result = removeSingleQuote(rem);
-                    System.out.println("exePath: " + cmd +" args: " + result);
+                    System.out.println("exePath: " + cmd + ", args: " + String.join("&", result.split(" ")));
                     executeProcess(cmd, result.split(" "));
                 }
                 else
