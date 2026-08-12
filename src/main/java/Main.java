@@ -24,11 +24,8 @@ public class Main {
             if (cmd.equals("exit")) {
                 System.exit(0);
             }
-            else if (cmd.equals("echo") || cmd.equals("cat")) {
-                String[] split = rem.split("'");
-                String newStr = String.join("", split);
-                String result = newStr.length() == rem.length() ? newStr.replaceAll("[\\t ]+", " ") : newStr;
-                System.out.println(result);
+            else if (cmd.equals("echo")) {
+                System.out.println(removeSingleQuote(rem));
             }
             else if (cmd.equals("type")) {
                 type(rem);
@@ -42,12 +39,20 @@ public class Main {
             else {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
-                    executeProcess(cmd, rem.split(" "));
+                    String result = removeSingleQuote(rem);
+                    executeProcess(cmd, result.split(" "));
                 }
                 else
                     System.out.println(input + ": command not found");
             }
         }
+    }
+
+    private static String removeSingleQuote(String input)
+    {
+        String[] split = input.split("'");
+        String newStr = String.join("", split);
+        return newStr.length() == input.length() ? newStr.replaceAll("[\\t ]+", " ") : newStr;
     }
 
     private static void changeDirectory(String input)
