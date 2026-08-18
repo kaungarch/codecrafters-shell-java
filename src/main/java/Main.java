@@ -55,26 +55,32 @@ public class Main {
     {
         boolean insideSingleQuote = false;
         boolean insideDoubleQuote = false;
+        boolean isBackslashOn = false;
         List<String> tokens = new ArrayList<>();
         StringBuilder currentToken = new StringBuilder();
 
         for (int i = 0; i < input.length(); i++) {
             char current = input.charAt(i);
 
-            if (current == '\'' && !insideDoubleQuote) {
+            if (current == '\\' && !isBackslashOn) {
+                isBackslashOn = true;
+            }
+            else if (current == '\'' && !insideDoubleQuote && !isBackslashOn) {
                 insideSingleQuote = !insideSingleQuote;
             }
-            else if (current == '"' && !insideSingleQuote) {
+            else if (current == '"' && !insideSingleQuote && !isBackslashOn) {
                 insideDoubleQuote = !insideDoubleQuote;
             }
-            else if (Character.isWhitespace(current) && !insideDoubleQuote && !insideSingleQuote) {
+            else if (Character.isWhitespace(current) && !insideDoubleQuote && !insideSingleQuote && !isBackslashOn) {
                 if (!currentToken.isEmpty()) {
+                    isBackslashOn = false;
                     tokens.add(currentToken.toString());
                     currentToken.setLength(0);
                 }
             }
             else {
                 currentToken.append(current);
+                isBackslashOn = false;
             }
         }
 
