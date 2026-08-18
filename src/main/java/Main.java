@@ -62,25 +62,23 @@ public class Main {
         for (int i = 0; i < input.length(); i++) {
             char current = input.charAt(i);
 
-            if (current == '\\' && !isBackslashOn) {
-                isBackslashOn = true;
+            if (current == '\\' && !insideSingleQuote && !insideDoubleQuote) {
+                isBackslashOn = !isBackslashOn;
             }
-            else if (current == '\'' && !insideDoubleQuote && !isBackslashOn) {
+            else if (current == '\'' && !insideDoubleQuote) {
                 insideSingleQuote = !insideSingleQuote;
             }
-            else if (current == '"' && !insideSingleQuote && !isBackslashOn) {
+            else if (current == '"' && !insideSingleQuote) {
                 insideDoubleQuote = !insideDoubleQuote;
             }
-            else if (Character.isWhitespace(current) && !insideDoubleQuote && !insideSingleQuote && !isBackslashOn) {
+            else if (Character.isWhitespace(current) && !insideDoubleQuote && !insideSingleQuote) {
                 if (!currentToken.isEmpty()) {
-                    isBackslashOn = false;
                     tokens.add(currentToken.toString());
                     currentToken.setLength(0);
                 }
             }
             else {
                 currentToken.append(current);
-                isBackslashOn = false;
             }
         }
 
