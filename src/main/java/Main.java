@@ -1,13 +1,10 @@
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Main {
     private static final List<String> BuiltInCommands = List.of("type", "echo", "exit", "pwd", "cd");
@@ -28,7 +25,7 @@ public class Main {
                 System.exit(0);
             }
             else if (cmd.equals("echo")) {
-                System.out.println(removeSingleQuote(rem.replace("\"", "'")));
+                System.out.println(removeQuotes(rem));
             }
             else if (cmd.equals("type")) {
                 type(rem);
@@ -66,11 +63,41 @@ public class Main {
         return result;
     }
 
-    private static String removeSingleQuote(String input)
+    private static String removeQuotes(String input)
     {
-        String[] split = input.split("'");
-        String newStr = String.join("", split);
-        return newStr.length() == input.length() ? newStr.replaceAll("[\\t ]+", " ") : newStr;
+        Deque<Character> quotes = new ArrayDeque<>();
+        char[] inputArr = input.toCharArray();
+        StringBuilder strb = new StringBuilder();
+
+        for (int i = 0; i < inputArr.length; i++) {
+            char current = inputArr[i];
+            boolean currentIsQuote = current == '\'' || current == '\"';
+            if (currentIsQuote) {
+//                if last quote and current quote is a pair, then pop the last quote from stack
+                if (quotes.size() > 0 && quotes.peek() == current) quotes.pop();
+//                if last quote and current quote is not a pair, then add current into stack
+                else quotes.add(current);
+            }
+            else {
+//                if within quote, simply append
+                if (quotes.size() > 0)
+                    strb.append(current);
+
+//                if not within quote
+                else {
+                    current = current == '\t' ? ' ' : current;
+                    boolean currentIsSpaceChar = current == ' ';
+                    Character prev = (i - 1) < 0 ? null : inputArr[i - 1];
+                    if (currentIsSpaceChar && prev != null && prev == ' ') {
+//                        do not append if current and last char from input string is also tab or space character.
+                    }
+                    else {
+                        strb.append(current);
+                    }
+                }
+            }
+        }
+        return strb.toString();
     }
 
     private static void changeDirectory(String input)
