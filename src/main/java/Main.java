@@ -25,7 +25,8 @@ public class Main {
                 System.exit(0);
             }
             else if (cmd.equals("echo")) {
-                System.out.println(removeQuotes(rem));
+                String result = String.join(" ", parseArguments(rem));
+                System.out.println(result);
             }
             else if (cmd.equals("type")) {
                 type(rem);
@@ -40,9 +41,9 @@ public class Main {
                 boolean executable = isExecutable(cmd);
                 if (executable) {
                     if (rem.contains("'"))
-                        executeProcess(cmd, getStrWithinSingleQuote(rem).toArray(new String[0]));
+                        executeProcess(cmd, parseArguments(rem));
                     else
-                        executeProcess(cmd, rem.split(" "));
+                        executeProcess(cmd, parseArguments(rem));
                 }
                 else
                     System.out.println(input + ": command not found");
@@ -50,54 +51,38 @@ public class Main {
         }
     }
 
-    public static List<String> getStrWithinSingleQuote(String input)
+    private static List<String> parseArguments(String input)
     {
-        Pattern pattern = Pattern.compile("'([^']*)'");
-        Matcher matcher = pattern.matcher(input);
-        List<String> result = new LinkedList<>();
+        boolean insideSingleQuote = false;
+        boolean insideDoubleQuote = false;
+        List<String> tokens = new ArrayList<>();
+        StringBuilder currentToken = new StringBuilder();
 
-        while (matcher.find()) {
-            result.add(matcher.group(1));
-        }
+        for (int i = 0; i < input.length(); i++) {
+            char current = input.charAt(i);
 
-        return result;
-    }
-
-    private static String removeQuotes(String input)
-    {
-        Deque<Character> quotes = new ArrayDeque<>();
-        char[] inputArr = input.toCharArray();
-        StringBuilder strb = new StringBuilder();
-
-        for (int i = 0; i < inputArr.length; i++) {
-            char current = inputArr[i];
-            boolean currentIsQuote = current == '\'' || current == '\"';
-            if (currentIsQuote) {
-//                if last quote and current quote is a pair, then pop the last quote from stack
-                if (quotes.size() > 0 && quotes.peek() == current) quotes.pop();
-//                if last quote and current quote is not a pair, then add current into stack
-                else quotes.add(current);
+            if (current == '\'' && !insideDoubleQuote) {
+                insideSingleQuote = !insideSingleQuote;
             }
-            else {
-//                if within quote, simply append
-                if (quotes.size() > 0)
-                    strb.append(current);
-
-//                if not within quote
-                else {
-                    current = current == '\t' ? ' ' : current;
-                    boolean currentIsSpaceChar = current == ' ';
-                    Character prev = (i - 1) < 0 ? null : inputArr[i - 1];
-                    if (currentIsSpaceChar && prev != null && prev == ' ') {
-//                        do not append if current and last char from input string is also tab or space character.
-                    }
-                    else {
-                        strb.append(current);
-                    }
+            else if (current == '"' && !insideSingleQuote) {
+                insideDoubleQuote = !insideDoubleQuote;
+            }
+            else if (Character.isWhitespace(current) && !insideDoubleQuote && !insideSingleQuote) {
+                if (!currentToken.isEmpty()) {
+                    tokens.add(currentToken.toString());
+                    currentToken.setLength(0);
                 }
             }
+            else {
+                currentToken.append(current);
+            }
         }
-        return strb.toString();
+
+        if (!currentToken.isEmpty()) {
+            tokens.add(currentToken.toString());
+        }
+
+        return tokens;
     }
 
     private static void changeDirectory(String input)
@@ -173,11 +158,11 @@ public class Main {
         return false;
     }
 
-    private static void executeProcess(String exePath, String[] options)
+    private static void executeProcess(String exePath, List<String> options)
     {
         List<String> commands = new LinkedList<>();
         commands.add(exePath);
-        commands.addAll(Arrays.asList(options));
+        commands.addAll(options);
 
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.redirectErrorStream(true);
