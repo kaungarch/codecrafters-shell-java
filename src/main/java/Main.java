@@ -28,8 +28,7 @@ public class Main {
                 System.exit(0);
             }
             else if (cmd.equals("echo")) {
-                String result = String.join(" ", parseArguments(rem));
-                System.out.println(result);
+                System.out.println(rem);
             }
             else if (cmd.equals("type")) {
                 type(rem);
@@ -43,7 +42,6 @@ public class Main {
             else {
                 boolean cmdIsExecutable = isExecutable(cmd);
                 if (cmdIsExecutable) {
-//                    executeProcess(cmd, Arrays.stream(rem.split(" ")).toList());
                     executeProcess(parsedInputs);
                 }
                 else
@@ -169,10 +167,6 @@ public class Main {
 
     private static void executeProcess(List<String> commands)
     {
-//        List<String> commands = new LinkedList<>();
-//        commands.add(exePath);
-//        commands.addAll(options);
-
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.redirectErrorStream(true);
         pb.inheritIO();
