@@ -38,8 +38,9 @@ public class Main {
                 changeDirectory(rem);
             }
             else {
-                boolean executable = isExecutable(cmd);
-                if (executable) {
+                String parsedCmd = String.join(" ", parseArguments(cmd));
+                boolean cmdIsExecutable = isExecutable(parsedCmd);
+                if (cmdIsExecutable) {
                     if (rem.contains("'"))
                         executeProcess(cmd, parseArguments(rem));
                     else
