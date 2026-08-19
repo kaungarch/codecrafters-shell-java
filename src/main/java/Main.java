@@ -65,10 +65,10 @@ public class Main {
             if (current == '\\' && !insideSingleQuote && !insideDoubleQuote) {
                 isBackslashOn = !isBackslashOn;
             }
-            else if (current == '\'' && !insideDoubleQuote) {
+            else if (current == '\'' && !insideDoubleQuote && !isBackslashOn) {
                 insideSingleQuote = !insideSingleQuote;
             }
-            else if (current == '"' && !insideSingleQuote) {
+            else if (current == '"' && !insideSingleQuote && !isBackslashOn) {
                 insideDoubleQuote = !insideDoubleQuote;
             }
             else if (isBackslashOn && !insideSingleQuote && !insideDoubleQuote) {
