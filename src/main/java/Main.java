@@ -164,8 +164,8 @@ public class Main {
         boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 
         for (String dir : directories) {
-            String fileExt = isWindows ? input + ".exe" : input;
-            File file = new File(dir, fileExt);
+//            String fileExt = isWindows ? input + ".exe" : input;
+            File file = new File(dir, input);
             if (file.exists() && file.canExecute())
                 return true;
         }
