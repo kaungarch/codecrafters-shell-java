@@ -23,9 +23,6 @@ public class Main {
 
             String cmd = parsedInputs.getFirst();
             String rem = inputString.replaceFirst(cmd + " ", "");
-//
-//            String cmd = !input.contains(" ") ? input : input.substring(0, input.indexOf(" "));
-//            String rem = !input.contains(" ") ? "" : input.substring(input.indexOf(" ") + 1);
 
             if (cmd.equals("exit")) {
                 System.exit(0);
@@ -47,10 +44,6 @@ public class Main {
                 boolean cmdIsExecutable = isExecutable(cmd);
                 if (cmdIsExecutable) {
                     executeProcess(cmd, Arrays.stream(rem.split(" ")).toList());
-//                    if (rem.contains("'"))
-//                        executeProcess(cmd, parseArguments(rem));
-//                    else
-//                        executeProcess(cmd, parseArguments(rem));
                 }
                 else
                     System.out.println(input + ": command not found");
@@ -164,8 +157,8 @@ public class Main {
         boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 
         for (String dir : directories) {
-//            String fileExt = isWindows ? input + ".exe" : input;
-            File file = new File(dir, input);
+            String fileExt = isWindows ? input + ".exe" : input;
+            File file = new File(dir, fileExt);
             if (file.exists() && file.canExecute())
                 return true;
         }
@@ -173,11 +166,11 @@ public class Main {
         return false;
     }
 
-    private static void executeProcess(String exePath, List<String> options)
+    private static void executeProcess(List<String> commands)
     {
-        List<String> commands = new LinkedList<>();
-        commands.add(exePath);
-        commands.addAll(options);
+//        List<String> commands = new LinkedList<>();
+//        commands.add(exePath);
+//        commands.addAll(options);
 
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.redirectErrorStream(true);
