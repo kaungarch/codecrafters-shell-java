@@ -43,7 +43,8 @@ public class Main {
             else {
                 boolean cmdIsExecutable = isExecutable(cmd);
                 if (cmdIsExecutable) {
-                    executeProcess(cmd, Arrays.stream(rem.split(" ")).toList());
+//                    executeProcess(cmd, Arrays.stream(rem.split(" ")).toList());
+                    executeProcess(parsedInputs);
                 }
                 else
                     System.out.println(input + ": command not found");
