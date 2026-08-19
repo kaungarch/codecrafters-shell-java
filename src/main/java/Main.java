@@ -44,7 +44,6 @@ public class Main {
                 changeDirectory(rem);
             }
             else {
-                System.out.println("cmd : " + cmd);
                 boolean cmdIsExecutable = isExecutable(cmd);
                 if (cmdIsExecutable) {
                     executeProcess(cmd, Arrays.stream(rem.split(" ")).toList());
