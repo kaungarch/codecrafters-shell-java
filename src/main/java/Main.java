@@ -62,7 +62,7 @@ public class Main {
         for (int i = 0; i < input.length(); i++) {
             char current = input.charAt(i);
 
-            if (current == '\\' && !insideSingleQuote && !insideDoubleQuote && !isBackslashOn) {
+            if (current == '\\' && !insideSingleQuote && !isBackslashOn) {
                 isBackslashOn = true;
             }
             else if (current == '\'' && !insideDoubleQuote && !isBackslashOn) {
@@ -71,7 +71,7 @@ public class Main {
             else if (current == '"' && !insideSingleQuote && !isBackslashOn) {
                 insideDoubleQuote = !insideDoubleQuote;
             }
-            else if (isBackslashOn && !insideSingleQuote && !insideDoubleQuote) {
+            else if (isBackslashOn) {
                 currentToken.append(current);
                 isBackslashOn = false;
             }
