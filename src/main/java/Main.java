@@ -1,5 +1,6 @@
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -28,7 +29,14 @@ public class Main {
                 System.exit(0);
             }
             else if (cmd.equals("echo")) {
-                System.out.println(rem);
+                if (rem.contains(">")) {
+                    rem = rem.contains("1>") ? rem.replace("1>", ">") : rem;
+                    String content = rem.substring(0, rem.indexOf(">"));
+                    String fileName = rem.substring(rem.indexOf(">") + 1);
+                    overwriteFile(fileName, content);
+                }
+                else
+                    System.out.println(rem);
             }
             else if (cmd.equals("type")) {
                 type(rem);
@@ -47,6 +55,16 @@ public class Main {
                 else
                     System.out.println(input + ": command not found");
             }
+        }
+    }
+
+    private static void overwriteFile(String fileName, String content)
+    {
+        Path path = Paths.get(fileName);
+        try {
+            Files.writeString(path, content);
+        } catch (Exception e) {
+            System.out.println("Error at writing file :" + e.getMessage());
         }
     }
 
