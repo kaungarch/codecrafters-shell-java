@@ -71,6 +71,10 @@ public class Main {
             else if (current == '"' && !insideSingleQuote) {
                 insideDoubleQuote = !insideDoubleQuote;
             }
+            else if (isBackslashOn && !insideSingleQuote && !insideDoubleQuote) {
+                currentToken.append(current);
+                isBackslashOn = false;
+            }
             else if (Character.isWhitespace(current) && !insideDoubleQuote && !insideSingleQuote) {
                 if (!currentToken.isEmpty()) {
                     tokens.add(currentToken.toString());
