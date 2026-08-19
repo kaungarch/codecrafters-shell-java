@@ -18,8 +18,14 @@ public class Main {
             System.out.print("$ ");
             String input = scanner.nextLine();
 
-            String cmd = !input.contains(" ") ? input : input.substring(0, input.indexOf(" "));
-            String rem = !input.contains(" ") ? "" : input.substring(input.indexOf(" ") + 1);
+            List<String> parsedInputs = parseArguments(input);
+            String inputString = String.join(" ", parsedInputs);
+
+            String cmd = parsedInputs.getFirst();
+            String rem = inputString.replaceFirst(cmd + " ", "");
+//
+//            String cmd = !input.contains(" ") ? input : input.substring(0, input.indexOf(" "));
+//            String rem = !input.contains(" ") ? "" : input.substring(input.indexOf(" ") + 1);
 
             if (cmd.equals("exit")) {
                 System.exit(0);
@@ -38,13 +44,14 @@ public class Main {
                 changeDirectory(rem);
             }
             else {
-                String parsedCmd = String.join(" ", parseArguments(cmd));
-                boolean cmdIsExecutable = isExecutable(parsedCmd);
+                System.out.println("cmd : " + cmd);
+                boolean cmdIsExecutable = isExecutable(cmd);
                 if (cmdIsExecutable) {
-                    if (rem.contains("'"))
-                        executeProcess(cmd, parseArguments(rem));
-                    else
-                        executeProcess(cmd, parseArguments(rem));
+                    executeProcess(cmd, Arrays.stream(rem.split(" ")).toList());
+//                    if (rem.contains("'"))
+//                        executeProcess(cmd, parseArguments(rem));
+//                    else
+//                        executeProcess(cmd, parseArguments(rem));
                 }
                 else
                     System.out.println(input + ": command not found");
