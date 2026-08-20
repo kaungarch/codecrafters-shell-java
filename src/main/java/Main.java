@@ -67,7 +67,7 @@ public class Main {
                     if (path.getParent() != null) {
                         Files.createDirectories(path.getParent());
                     }
-                    StandardOpenOption option = fileDescriptor.contains(">>") ? StandardOpenOption.APPEND : StandardOpenOption.CREATE_NEW;
+                    StandardOpenOption option = fileDescriptor.contains(">>") ? StandardOpenOption.APPEND : StandardOpenOption.CREATE;
 
                     PrintStream fileOutputStream = new PrintStream(Files.newOutputStream(path, option));
                     if (fileDescriptor.equals("2>")) {
@@ -229,10 +229,12 @@ public class Main {
                     Files.createDirectories(path.getParent());
                 }
 
-                if (fileDescriptor.contains(">"))
+                if (fileDescriptor.contains(">")){
                     processBuilder.redirectOutput(path.toFile());
-                else
+                }
+                else {
                     processBuilder.redirectOutput(ProcessBuilder.Redirect.appendTo(path.toFile()));
+                }
 
                 processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
 
