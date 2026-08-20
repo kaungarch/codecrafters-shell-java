@@ -32,7 +32,7 @@ public class Main {
 
             for (int i = 0; i < inputTokens.size(); i++) {
                 String currentToken = inputTokens.get(i);
-                if (currentToken.contains(">")) {
+                if (currentToken.contains(">") || currentToken.contains(">>")) {
                     if (inputTokens.size() > i + 1) {
                         outputFile = inputTokens.get(i + 1);
                         fileDescriptor = currentToken;
