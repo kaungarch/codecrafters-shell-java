@@ -1,9 +1,7 @@
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +32,7 @@ public class Main {
 
             for (int i = 0; i < inputTokens.size(); i++) {
                 String currentToken = inputTokens.get(i);
-                if (currentToken.equals(">") || currentToken.equals("1>") || currentToken.equals("2>")) {
+                if (currentToken.contains(">")) {
                     if (inputTokens.size() > i + 1) {
                         outputFile = inputTokens.get(i + 1);
                         fileDescriptor = currentToken;
@@ -69,7 +67,9 @@ public class Main {
                     if (path.getParent() != null) {
                         Files.createDirectories(path.getParent());
                     }
-                    PrintStream fileOutputStream = new PrintStream(Files.newOutputStream(path));
+                    StandardOpenOption option = fileDescriptor.contains(">>") ? StandardOpenOption.APPEND : StandardOpenOption.CREATE_NEW;
+
+                    PrintStream fileOutputStream = new PrintStream(Files.newOutputStream(path, option));
                     if (fileDescriptor.equals("2>")) {
                         System.setOut(defaultOutputStream);
                     }
@@ -231,6 +231,7 @@ public class Main {
                 processBuilder.redirectOutput(path.toFile());
 
                 processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+
                 if (fileDescriptor.equals("2>")) {
                     processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                     processBuilder.redirectError(path.toFile());
