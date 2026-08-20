@@ -67,7 +67,7 @@ public class Main {
                     if (path.getParent() != null) {
                         Files.createDirectories(path.getParent());
                     }
-                    StandardOpenOption option = fileDescriptor.contains(">>") ? StandardOpenOption.APPEND : StandardOpenOption.CREATE;
+                    StandardOpenOption option = fileDescriptor.contains(">>") ? StandardOpenOption.APPEND : StandardOpenOption.WRITE;
 
                     PrintStream fileOutputStream = new PrintStream(Files.newOutputStream(path, option));
                     if (fileDescriptor.equals("2>")) {
