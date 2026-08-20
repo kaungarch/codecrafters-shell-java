@@ -228,7 +228,11 @@ public class Main {
                 if (path.getParent() != null) {
                     Files.createDirectories(path.getParent());
                 }
-                processBuilder.redirectOutput(path.toFile());
+
+                if (fileDescriptor.contains(">"))
+                    processBuilder.redirectOutput(path.toFile());
+                else
+                    processBuilder.redirectOutput(ProcessBuilder.Redirect.appendTo(path.toFile()));
 
                 processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
 
