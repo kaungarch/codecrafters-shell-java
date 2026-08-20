@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -19,62 +20,72 @@ public class Main {
             System.out.print("$ ");
             String input = scanner.nextLine();
 
-            List<String> parsedInputs = parseArguments(input);
-            String inputString = String.join(" ", parsedInputs);
+            List<String> inputTokens = parseArguments(input);
 
-            String cmd = parsedInputs.getFirst();
-            String rem = inputString.replaceFirst(cmd + " ", "");
+            if (inputTokens.isEmpty()) continue;
 
-            if (cmd.equals("exit")) {
-                System.exit(0);
-            }
-            else if (cmd.equals("echo")) {
-                if (rem.contains(">")) {
-                    rem = rem.contains("1>") ? rem.replace("1>", ">") : rem;
-                    String content = rem.substring(0, rem.indexOf(">"));
-                    String fileName = rem.substring(rem.indexOf(">") + 1);
-                    overwriteFile(fileName, content);
+            String outputFile = null;
+            List<String> cleanTokens = new ArrayList<>();
+            for (int i = 0; i < inputTokens.size(); i++) {
+                String currentToken = inputTokens.get(i);
+                if (currentToken.equals(">") || currentToken.equals("1>")) {
+                    if (inputTokens.size() > i + 1) {
+                        outputFile = inputTokens.get(i + 1);
+                        break;
+                    }
                 }
-                else
+                else {
+                    cleanTokens.add(currentToken);
+                }
+            }
+
+            if (cleanTokens.isEmpty()) continue;
+
+            String cmd = cleanTokens.getFirst();
+            List<String> argsList = cleanTokens.subList(1, cleanTokens.size());
+            String rem = String.join(" ", argsList);
+
+            if (!BuiltInCommands.contains(cmd) && isExecutable(cmd)) {
+                executeProcess(cleanTokens, outputFile);
+                continue;
+            }
+
+            PrintStream defaultOutputStream = System.out;
+
+
+            try {
+
+                if (outputFile != null) {
+                    Path path = Paths.get(outputFile);
+                    if (path.getParent() != null) {
+                        Files.createDirectories(path.getParent());
+                    }
+                    PrintStream fileOutputStream = new PrintStream(Files.newOutputStream(path));
+                    System.setOut(fileOutputStream);
+                }
+
+                if (cmd.equals("exit")) {
+                    System.exit(0);
+                }
+                else if (cmd.equals("echo")) {
                     System.out.println(rem);
-            }
-            else if (cmd.equals("type")) {
-                type(rem);
-            }
-            else if (cmd.equals("pwd")) {
-                printWorkingDirectory();
-            }
-            else if (cmd.equals("cd")) {
-                changeDirectory(rem);
-            }
-            else {
-                boolean cmdIsExecutable = isExecutable(cmd);
-                if (cmdIsExecutable) {
-                    executeProcess(parsedInputs);
                 }
-                else
+                else if (cmd.equals("type")) {
+                    type(rem);
+                }
+                else if (cmd.equals("pwd")) {
+                    printWorkingDirectory();
+                }
+                else if (cmd.equals("cd")) {
+                    changeDirectory(rem);
+                }
+                else {
                     System.out.println(input + ": command not found");
-            }
-        }
-    }
-
-    private static void overwriteFile(String fileName, String content)
-    {
-        Path path = Paths.get(fileName);
-        try {
-            boolean fileExists = Files.exists(path);
-            if (fileExists) {
-                Files.writeString(path, content);
-            }
-            else {
-                File file = new File(fileName);
-                boolean fileIsCreated = file.createNewFile();
-                if (fileIsCreated) {
-                    Files.writeString(path, content);
                 }
+            } finally {
+                System.out.flush();
+                System.setOut(defaultOutputStream);
             }
-        } catch (Exception e) {
-            System.out.println("Error at writing file :" + e.getMessage());
         }
     }
 
@@ -193,20 +204,27 @@ public class Main {
         return false;
     }
 
-    private static void executeProcess(List<String> commands)
+    private static void executeProcess(List<String> commands, String outputFile)
     {
-        ProcessBuilder pb = new ProcessBuilder(commands);
-        pb.redirectErrorStream(true);
-        pb.inheritIO();
+        ProcessBuilder processBuilder = new ProcessBuilder(commands);
+        processBuilder.redirectErrorStream(true);
 
-        try (
-                Process process = pb.start()
-        ) {
+        try {
+            if (outputFile != null) {
+                Path path = Paths.get(outputFile);
+                if (path.getParent() != null) {
+                    Files.createDirectories(path.getParent());
+                }
+                processBuilder.redirectOutput(path.toFile());
+            }
+            else {
+                processBuilder.inheritIO();
+            }
 
-            int exitCode = process.waitFor();
-
+            Process process = processBuilder.start();
+            process.waitFor();
         } catch (Exception e) {
-            System.out.println("Got exception: " + e.getMessage());
+            System.out.println("Got Exception : " + e.getMessage());
         }
     }
 }
