@@ -62,7 +62,17 @@ public class Main {
     {
         Path path = Paths.get(fileName);
         try {
-            Files.writeString(path, content);
+            boolean fileExists = Files.exists(path);
+            if (fileExists) {
+                Files.writeString(path, content);
+            }
+            else {
+                File file = new File(fileName);
+                boolean fileIsCreated = file.createNewFile();
+                if (fileIsCreated) {
+                    Files.writeString(path, content);
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error at writing file :" + e.getMessage());
         }
