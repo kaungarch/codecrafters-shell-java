@@ -248,6 +248,10 @@ public class Main {
                     processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                     processBuilder.redirectError(path.toFile());
                 }
+                else if (fileDescriptor.equals("2>>")) {
+                    processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                    processBuilder.redirectError(ProcessBuilder.Redirect.appendTo(path.toFile()));
+                }
             }
             else {
                 processBuilder.inheritIO();
