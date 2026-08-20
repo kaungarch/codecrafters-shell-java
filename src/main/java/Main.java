@@ -68,10 +68,11 @@ public class Main {
                         Files.createDirectories(path.getParent());
                     }
 
-                    PrintStream fileOutputStream = null;
+                    PrintStream fileOutputStream;
 
                     if (fileDescriptor.contains(">>"))
-                        fileOutputStream = new PrintStream(Files.newOutputStream(path, StandardOpenOption.APPEND));
+                        fileOutputStream = new PrintStream(Files.newOutputStream(path,
+                                StandardOpenOption.CREATE, StandardOpenOption.APPEND));
                     else
                         fileOutputStream = new PrintStream(Files.newOutputStream(path));
 
