@@ -212,7 +212,7 @@ public class Main {
     private static void executeProcess(List<String> commands, String outputFile)
     {
         ProcessBuilder processBuilder = new ProcessBuilder(commands);
-//        processBuilder.redirectErrorStream(true);
+        processBuilder.redirectErrorStream(true);
 
         try {
             if (outputFile != null) {
@@ -221,7 +221,6 @@ public class Main {
                     Files.createDirectories(path.getParent());
                 }
                 processBuilder.redirectOutput(path.toFile());
-                processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
             }
             else {
                 processBuilder.inheritIO();
