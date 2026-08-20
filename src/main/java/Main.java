@@ -20,11 +20,14 @@ public class Main {
             System.out.print("$ ");
             String input = scanner.nextLine();
 
+//            parsing user input
             List<String> inputTokens = parseArguments(input);
 
             if (inputTokens.isEmpty()) continue;
 
+//            for redirect output file
             String outputFile = null;
+//            storage for tokens that doesn't present operators like '>'
             List<String> cleanTokens = new ArrayList<>();
             for (int i = 0; i < inputTokens.size(); i++) {
                 String currentToken = inputTokens.get(i);
@@ -41,9 +44,11 @@ public class Main {
 
             if (cleanTokens.isEmpty()) continue;
 
+//            get the 1st token as cmd
             String cmd = cleanTokens.getFirst();
+//            treat the rest tokens as arguments
             List<String> argsList = cleanTokens.subList(1, cleanTokens.size());
-            String rem = String.join(" ", argsList);
+            String parsedArgs = String.join(" ", argsList);
 
             if (!BuiltInCommands.contains(cmd) && isExecutable(cmd)) {
                 executeProcess(cleanTokens, outputFile);
@@ -68,16 +73,16 @@ public class Main {
                     System.exit(0);
                 }
                 else if (cmd.equals("echo")) {
-                    System.out.println(rem);
+                    System.out.println(parsedArgs);
                 }
                 else if (cmd.equals("type")) {
-                    type(rem);
+                    type(parsedArgs);
                 }
                 else if (cmd.equals("pwd")) {
                     printWorkingDirectory();
                 }
                 else if (cmd.equals("cd")) {
-                    changeDirectory(rem);
+                    changeDirectory(parsedArgs);
                 }
                 else {
                     System.out.println(input + ": command not found");
@@ -207,7 +212,7 @@ public class Main {
     private static void executeProcess(List<String> commands, String outputFile)
     {
         ProcessBuilder processBuilder = new ProcessBuilder(commands);
-        processBuilder.redirectErrorStream(true);
+//        processBuilder.redirectErrorStream(true);
 
         try {
             if (outputFile != null) {
