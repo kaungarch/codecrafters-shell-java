@@ -221,6 +221,7 @@ public class Main {
                     Files.createDirectories(path.getParent());
                 }
                 processBuilder.redirectOutput(path.toFile());
+                processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 processBuilder.redirectError(path.toFile());
             }
             else {
