@@ -222,7 +222,7 @@ public class Main {
                 }
                 processBuilder.redirectOutput(path.toFile());
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                processBuilder.redirectError(path.toFile());
+//                processBuilder.redirectError(path.toFile());
             }
             else {
                 processBuilder.inheritIO();
