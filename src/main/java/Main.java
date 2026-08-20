@@ -235,11 +235,11 @@ public class Main {
                     Files.createDirectories(path.getParent());
                 }
 
-                if (fileDescriptor.contains(">")) {
-                    processBuilder.redirectOutput(path.toFile());
+                if (fileDescriptor.contains(">>")) {
+                    processBuilder.redirectOutput(ProcessBuilder.Redirect.appendTo(path.toFile()));
                 }
                 else {
-                    processBuilder.redirectOutput(ProcessBuilder.Redirect.appendTo(path.toFile()));
+                    processBuilder.redirectOutput(path.toFile());
                 }
 
                 processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
