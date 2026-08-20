@@ -31,7 +31,7 @@ public class Main {
             List<String> cleanTokens = new ArrayList<>();
             for (int i = 0; i < inputTokens.size(); i++) {
                 String currentToken = inputTokens.get(i);
-                if (currentToken.equals(">") || currentToken.equals("1>")) {
+                if (currentToken.equals(">") || currentToken.equals("1>") || currentToken.equals("2>")) {
                     if (inputTokens.size() > i + 1) {
                         outputFile = inputTokens.get(i + 1);
                         break;
