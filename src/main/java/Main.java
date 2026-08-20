@@ -76,7 +76,7 @@ public class Main {
                     else
                         fileOutputStream = new PrintStream(Files.newOutputStream(path));
 
-                    if (fileDescriptor.equals("2>")) {
+                    if (fileDescriptor.contains("2>")) {
                         System.setOut(defaultOutputStream);
                     }
                     else {
