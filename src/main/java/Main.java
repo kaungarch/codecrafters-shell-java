@@ -229,7 +229,7 @@ public class Main {
                     Files.createDirectories(path.getParent());
                 }
                 processBuilder.redirectOutput(path.toFile());
-                processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+//                processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
                 if (fileDescriptor.equals("2>"))
                     processBuilder.redirectError(path.toFile());
