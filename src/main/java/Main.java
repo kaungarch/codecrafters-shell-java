@@ -55,7 +55,7 @@ public class Main {
             String parsedArgs = String.join(" ", argsList);
 
             if (!BuiltInCommands.contains(cmd) && isExecutable(cmd)) {
-                executeProcess(cleanTokens, outputFile);
+                executeProcess(cleanTokens, outputFile, fileDescriptor);
                 continue;
             }
 
@@ -218,10 +218,9 @@ public class Main {
         return false;
     }
 
-    private static void executeProcess(List<String> commands, String outputFile)
+    private static void executeProcess(List<String> commands, String outputFile, String fileDescriptor)
     {
         ProcessBuilder processBuilder = new ProcessBuilder(commands);
-//        processBuilder.redirectErrorStream(true);
 
         try {
             if (outputFile != null) {
@@ -231,7 +230,9 @@ public class Main {
                 }
                 processBuilder.redirectOutput(path.toFile());
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                processBuilder.redirectError(path.toFile());
+
+                if (fileDescriptor.equals("2>"))
+                    processBuilder.redirectError(path.toFile());
             }
             else {
                 processBuilder.inheritIO();
