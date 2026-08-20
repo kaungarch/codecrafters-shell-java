@@ -59,7 +59,7 @@ public class Main {
 
 
             try {
-
+//                redirecting output stream to a file if command is built in command and output file exists.
                 if (outputFile != null) {
                     Path path = Paths.get(outputFile);
                     if (path.getParent() != null) {
@@ -221,6 +221,7 @@ public class Main {
                     Files.createDirectories(path.getParent());
                 }
                 processBuilder.redirectOutput(path.toFile());
+                processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
             }
             else {
                 processBuilder.inheritIO();
