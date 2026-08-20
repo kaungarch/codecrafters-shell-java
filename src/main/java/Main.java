@@ -29,11 +29,15 @@ public class Main {
             String outputFile = null;
 //            storage for tokens that doesn't present operators like '>'
             List<String> cleanTokens = new ArrayList<>();
+//            file descriptor
+            String fileDescriptor = null;
+
             for (int i = 0; i < inputTokens.size(); i++) {
                 String currentToken = inputTokens.get(i);
                 if (currentToken.equals(">") || currentToken.equals("1>") || currentToken.equals("2>")) {
                     if (inputTokens.size() > i + 1) {
                         outputFile = inputTokens.get(i + 1);
+                        fileDescriptor = currentToken;
                         break;
                     }
                 }
@@ -66,7 +70,12 @@ public class Main {
                         Files.createDirectories(path.getParent());
                     }
                     PrintStream fileOutputStream = new PrintStream(Files.newOutputStream(path));
-                    System.setOut(fileOutputStream);
+                    if (fileDescriptor.equals("2>")) {
+                        System.setOut(defaultOutputStream);
+                    }
+                    else {
+                        System.setOut(fileOutputStream);
+                    }
                 }
 
                 if (cmd.equals("exit")) {
