@@ -32,7 +32,7 @@ public class Main {
 
             for (int i = 0; i < inputTokens.size(); i++) {
                 String currentToken = inputTokens.get(i);
-                if (currentToken.contains(">") || currentToken.contains(">>")) {
+                if (currentToken.contains(">")) {
                     if (inputTokens.size() > i + 1) {
                         outputFile = inputTokens.get(i + 1);
                         fileDescriptor = currentToken;
@@ -68,10 +68,12 @@ public class Main {
                         Files.createDirectories(path.getParent());
                     }
 
-                    PrintStream fileOutputStream = new PrintStream(Files.newOutputStream(path));
+                    PrintStream fileOutputStream = null;
 
                     if (fileDescriptor.contains(">>"))
                         fileOutputStream = new PrintStream(Files.newOutputStream(path, StandardOpenOption.APPEND));
+                    else
+                        fileOutputStream = new PrintStream(Files.newOutputStream(path));
 
                     if (fileDescriptor.equals("2>")) {
                         System.setOut(defaultOutputStream);
