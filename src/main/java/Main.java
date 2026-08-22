@@ -1,3 +1,7 @@
+import org.jline.reader.*;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -11,56 +15,68 @@ public class Main {
 
     public static void main(String[] args) throws Exception
     {
-        // TODO: Uncomment the code below to pass the first stage
-        Scanner scanner = new Scanner(System.in);
+        try (
+                Terminal terminal = TerminalBuilder.builder().build();
+        ) {
+            // TODO: Uncomment the code below to pass the first stage
+//            Scanner scanner = new Scanner(System.in);
+            Completer completer = new CustomCompleter();
+            LineReader reader = LineReaderBuilder.builder()
+                    .terminal(terminal)
+                    .completer(completer)
+                    .option(LineReader.Option.AUTO_LIST, true) // Automatically list options
+                    .option(LineReader.Option.LIST_PACKED, true) // Display completions in a compact form
+                    .option(LineReader.Option.AUTO_MENU, true) // Show menu automatically
+                    .option(LineReader.Option.MENU_COMPLETE, true) // Cycle through completions
+                    .build();
 
-        while (true) {
-            System.out.print("$ ");
-            String input = scanner.nextLine();
+            while (true) {
+//                System.out.print("$ ");
+//                String input = scanner.nextLine();
+                String input = reader.readLine("$ ");
 
 //            parsing user input
-            List<String> inputTokens = parseArguments(input);
+                List<String> inputTokens = parseArguments(input);
 
-            if (inputTokens.isEmpty()) continue;
+                if (inputTokens.isEmpty()) continue;
 
 //            for redirect output file
-            String outputFile = null;
+                String outputFile = null;
 //            storage for tokens that doesn't present operators like '>'
-            List<String> cleanTokens = new ArrayList<>();
+                List<String> cleanTokens = new ArrayList<>();
 //            file descriptor
-            String fileDescriptor = null;
+                String fileDescriptor = null;
 
-            for (int i = 0; i < inputTokens.size(); i++) {
-                String currentToken = inputTokens.get(i);
-                if (currentToken.contains(">")) {
-                    if (inputTokens.size() > i + 1) {
-                        outputFile = inputTokens.get(i + 1);
-                        fileDescriptor = currentToken;
-                        break;
+                for (int i = 0; i < inputTokens.size(); i++) {
+                    String currentToken = inputTokens.get(i);
+                    if (currentToken.contains(">")) {
+                        if (inputTokens.size() > i + 1) {
+                            outputFile = inputTokens.get(i + 1);
+                            fileDescriptor = currentToken;
+                            break;
+                        }
+                    }
+                    else {
+                        cleanTokens.add(currentToken);
                     }
                 }
-                else {
-                    cleanTokens.add(currentToken);
-                }
-            }
 
-            if (cleanTokens.isEmpty()) continue;
+                if (cleanTokens.isEmpty()) continue;
 
 //            get the 1st token as cmd
-            String cmd = cleanTokens.getFirst();
+                String cmd = cleanTokens.getFirst();
 //            treat the rest tokens as arguments
-            List<String> argsList = cleanTokens.subList(1, cleanTokens.size());
-            String parsedArgs = String.join(" ", argsList);
+                List<String> argsList = cleanTokens.subList(1, cleanTokens.size());
+                String parsedArgs = String.join(" ", argsList);
 
-            if (!BuiltInCommands.contains(cmd) && isExecutable(cmd)) {
-                executeProcess(cleanTokens, outputFile, fileDescriptor);
-                continue;
-            }
+                if (!BuiltInCommands.contains(cmd) && isExecutable(cmd)) {
+                    executeProcess(cleanTokens, outputFile, fileDescriptor);
+                    continue;
+                }
 
-            PrintStream defaultOutputStream = System.out;
+                PrintStream defaultOutputStream = System.out;
 
 
-            try {
 //                redirecting output stream to a file if command is built in command and output file exists.
                 if (outputFile != null) {
                     Path path = Paths.get(outputFile);
@@ -102,10 +118,12 @@ public class Main {
                 else {
                     System.out.println(input + ": command not found");
                 }
-            } finally {
-                System.out.flush();
-                System.setOut(defaultOutputStream);
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            System.out.flush();
+//                System.setOut(defaultOutputStream);
         }
     }
 
@@ -262,5 +280,19 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Got Exception : " + e.getMessage());
         }
+    }
+}
+
+class CustomCompleter implements Completer {
+    @Override
+    public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates)
+    {
+        String word = line.word();
+
+        if (word.startsWith("ech"))
+            candidates.add(new Candidate("echo"));
+
+        if (word.startsWith("exi"))
+            candidates.add(new Candidate("exit"));
     }
 }
