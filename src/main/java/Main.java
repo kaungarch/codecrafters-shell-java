@@ -1,4 +1,5 @@
 import org.jline.reader.*;
+import org.jline.reader.impl.DefaultParser;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -20,10 +21,14 @@ public class Main {
         ) {
             // TODO: Uncomment the code below to pass the first stage
 //            Scanner scanner = new Scanner(System.in);
+
             Completer completer = new CustomCompleter();
+            DefaultParser parser = new DefaultParser();
+            parser.setEscapeChars(null);
             LineReader reader = LineReaderBuilder.builder()
                     .terminal(terminal)
                     .completer(completer)
+                    .parser(parser)
                     .option(LineReader.Option.AUTO_LIST, true) // Automatically list options
                     .option(LineReader.Option.LIST_PACKED, true) // Display completions in a compact form
                     .option(LineReader.Option.AUTO_MENU, true) // Show menu automatically
